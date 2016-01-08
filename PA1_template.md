@@ -57,16 +57,10 @@ mean(stepsday$steps, na.rm = TRUE)
 ```
 
 ```r
-## [1] 9354.23
-
 median(stepsday$steps, na.rm = TRUE)
 ```
 
 ```
-## [1] 10395
-```
-
-```r
 ## [1] 10395
 ```
 
@@ -75,7 +69,8 @@ median(stepsday$steps, na.rm = TRUE)
 
 
 ```r
-# 6. Make a times series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+# 6. Make a times series plot of the 5-minute interval (x-axis) and the average number of steps taken,
+# averaged across all days (y-axis)
 avsteps <- aggregate(x = dataset$steps , by = list(dataset$interval), FUN = mean ,na.rm=TRUE)
 names(avsteps) <- c("interval","steps")
 
@@ -86,16 +81,13 @@ with(avsteps, plot(interval, steps, type = "l", main = "Times Series Plot of Ave
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 ```r
-# 7. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps
+# 7. Which 5-minute interval, on average across all the days in the dataset, contains the maximum
+# number of steps
 
 avsteps[which.max(avsteps$steps),1]
 ```
 
 ```
-## [1] 835
-```
-
-```r
 ## [1] 835
 ```
 
@@ -113,8 +105,6 @@ nrow(dataset[is.na(dataset),])
 ```
 
 ```r
-## [1] 2304
-
 # 9. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 ## Strategy: imputing missing values with average step values at the time interval
 
@@ -126,7 +116,10 @@ imputed <- imputed[,-4]
 imputed <- imputed[,c(2,3,1)]
 names(imputed)[1] <- "steps"
 
-# 10. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+# 10. Make a histogram of the total number of steps taken each day and Calculate and report the
+# mean and median total number of steps taken per day. Do these values differ from the estimates
+# from the first part of the assignment? What is the impact of imputing missing data on the
+# estimates of the total daily number of steps?
 
 newstepsday <- aggregate(x = imputed$steps , by = list(imputed$date), FUN = sum ,na.rm=TRUE)
 names(newstepsday) <- c("date","steps")
@@ -147,9 +140,7 @@ mean(newstepsday$steps, na.rm = TRUE)
 ```
 
 ```r
-## Now: [1] 10766.19
 ## (Previous: [1] 9354.23)
-
 
 median(newstepsday$steps, na.rm = TRUE)
 ```
@@ -159,7 +150,6 @@ median(newstepsday$steps, na.rm = TRUE)
 ```
 
 ```r
-## [1] 10766.19
 ## (Previous: [1] 10395)
 ```
 
@@ -169,11 +159,13 @@ median(newstepsday$steps, na.rm = TRUE)
 
 
 ```r
-# 11. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+# 11. Create a new factor variable in the dataset with two levels – “weekday” and “weekend”
+# indicating whether a given date is a weekday or weekend day.
 
 imputed$weekday <- as.factor(ifelse(weekdays(imputed$date) %in% c("Saturday","Sunday"), "Weekend", "Weekday")) 
 
-# 12. Make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
+# 12. Make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the
+# average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
 avsteps.by.interval.and.weekday  <- aggregate(x = imputed$steps , 
                                                     by = list(imputed$interval,imputed$weekday), FUN = mean ,na.rm=TRUE)
