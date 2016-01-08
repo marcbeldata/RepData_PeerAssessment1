@@ -3,22 +3,38 @@
 
 ## Loading and preprocessing the data
 
-```{r echo=TRUE}
 
+```r
 # 1. Load the data
 unzip('activity.zip')
 dataset <- read.csv('activity.csv', header=TRUE, sep = ',', na.strings = NA)
 str(dataset)
+```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
+
+```r
 # 2. Process/transform the data (if necessary) into a format suitable for your analysis
 dataset$date <- as.Date(dataset$date, format = "%Y-%m-%d")
 str(dataset)
 ```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Date, format: "2012-10-01" "2012-10-01" ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
+
 ## What is mean total number of steps taken per day?
 
-```{r echo=TRUE}
 
+```r
 # 3. Calculate the total number of steps taken per day
 stepsday <- aggregate(x = dataset$steps , by = list(dataset$date), FUN = sum , na.rm=TRUE)
 names(stepsday) <- c("date","steps")
@@ -26,47 +42,77 @@ names(stepsday) <- c("date","steps")
 # 4. Make a histogram of the total number of steps taken each day
 
 hist(stepsday$steps, col = "red", xlab = "Total steps", main = "Histogram of daily steps", breaks = 10)
+```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
+
+```r
 # 5. Calculate and report the mean and median of the total number of steps taken per day
 
 mean(stepsday$steps, na.rm = TRUE)
+```
 
+```
+## [1] 9354.23
+```
+
+```r
 ## [1] 9354.23
 
 median(stepsday$steps, na.rm = TRUE)
+```
 
+```
 ## [1] 10395
+```
 
+```r
+## [1] 10395
 ```
 
 ## What is the average daily activity pattern?
 
 
-```{r echo=TRUE}
 
+```r
 # 6. Make a times series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 avsteps <- aggregate(x = dataset$steps , by = list(dataset$interval), FUN = mean ,na.rm=TRUE)
 names(avsteps) <- c("interval","steps")
 
 # Plot
 with(avsteps, plot(interval, steps, type = "l", main = "Times Series Plot of Average Steps by Interval"))
+```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+
+```r
 # 7. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps
 
 avsteps[which.max(avsteps$steps),1]
+```
 
+```
 ## [1] 835
-                 
+```
+
+```r
+## [1] 835
 ```
 
 ## Imputing missing values
 
-```{r echo=TRUE}
 
+```r
 # 8. Calculate and report the total number of missing values in the dataset
 
 nrow(dataset[is.na(dataset),])
+```
 
+```
+## [1] 2304
+```
+
+```r
 ## [1] 2304
 
 # 9. Create a new dataset that is equal to the original dataset but with the missing data filled in.
@@ -87,27 +133,42 @@ names(newstepsday) <- c("date","steps")
 
 # Histogram
 hist(newstepsday$steps, col = "red", xlab = "Total steps", main = "Histogram of daily steps (corrected)", breaks = 10)
+```
 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
+
+```r
 # Mean and Median
 mean(newstepsday$steps, na.rm = TRUE)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 ## Now: [1] 10766.19
 ## (Previous: [1] 9354.23)
 
 
 median(newstepsday$steps, na.rm = TRUE)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 ## [1] 10766.19
 ## (Previous: [1] 10395)
-
 ```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
-```{r echo=TRUE}
 
+```r
 # 11. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
 
 imputed$weekday <- as.factor(ifelse(weekdays(imputed$date) %in% c("Saturday","Sunday"), "Weekend", "Weekday")) 
@@ -127,6 +188,6 @@ par(mfrow = c(2, 1), mar = c(4,4,3,2), oma = c(0,0,2,0))
 with(weekdays, plot(interval, steps, xlab = "Weekday", type = "l"))
 with(weekend, plot(interval, steps, xlab = "Weekend", type = "l"))
 mtext("Average steps by type of day", outer = TRUE)
-
-
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
